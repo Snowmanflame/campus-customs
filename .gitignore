@@ -1,0 +1,14 @@
+# secrets: the real Portkey key lives only in the root .env (see .env.example)
+/.env
+*.tmp
+
+# python
+.venv/
+__pycache__/
+
+# node
+node_modules/
+dist/
+
+# local editor / assistant settings
+.claude/

@@ -1,0 +1,290 @@
+{
+  "run": {
+    "date_run": "2026-10-07",
+    "shop_today": "2026-08-31",
+    "model": "gpt-6-luna via Portkey (OpenAI Responses API)",
+    "database": "data/campus_customs_new.db (reset from data/campus_customs.db before the run)",
+    "ticket_order": [
+      101,
+      103,
+      102
+    ],
+    "checking_start": 3400.0,
+    "checking_end": 160.0,
+    "checking_end_matches_cash_accounts": true,
+    "human_operator": "JZ (approved both payments on the dashboard)",
+    "audit_trail": "output/audit_trail.json: seq 3 = reset, 4-6 = first pass (101, 103, 102), 7-8 = human approvals, 9-11 = follow-up pass after payment. Seq 1-2 are an earlier reset and a failed attempt (Portkey cache ids rejected by Azure; fixed, no DB changes)."
+  },
+  "tickets": [
+    {
+      "ticket_id": 101,
+      "type": "customer_order",
+      "requester": "Tauhid Zaman",
+      "final_status": "waiting_vendor",
+      "board_state": "resolved",
+      "outcome": "Size-S tee is out of stock and Bulldog Print Co was blocked by overdue invoice 501. Accounting queued the $840 invoice; a human (JZ) approved it, which unblocked Bulldog. Inventory then drafted PO #1 for 1 tee ($8, earliest arrival 2026-09-05) and Customer Service drafted an update for Tauhid. Waiting on the vendor.",
+      "agents": {
+        "boss": "Read the ticket, sent it to Inventory first (stock question), then Accounting (invoice 501 blocker), then Customer Service; set status in_progress -> waiting_approval. On the follow-up pass, after the payment, routed Inventory -> Customer Service and set waiting_vendor.",
+        "inventory": "Pass 1: check_stock found 0 in size S (short 1); check_vendor_restock showed Bulldog Print can't ship (invoice 501 open, 3 days overdue), so it drafted no PO. Pass 2: confirmed Bulldog can ship and drafted PO #1 (1 x CC-TEE-WHITE S, $8.00, ETA 2026-09-05).",
+        "accounting": "Checked list_bills_due and list_approvals (nothing pending), then request_payment for invoice 501 -> approval #1, $840, pending human. Noted $3,400 covers it.",
+        "facilities": "Not dispatched (no lease or rent involved).",
+        "customer_service": "Saved draft #1 (out of stock, ~5-day lead once reordered, no firm date) and draft #3 after the PO (Sept 5 is only the earliest possible arrival). Nothing sent."
+      },
+      "mcp_tools_used_by_agent": {
+        "boss": [
+          "get_ticket",
+          "update_ticket_status",
+          "list_bills_due"
+        ],
+        "inventory": [
+          "get_ticket",
+          "check_stock",
+          "check_vendor_restock",
+          "create_purchase_order"
+        ],
+        "accounting": [
+          "get_ticket",
+          "list_bills_due",
+          "list_approvals",
+          "request_payment"
+        ],
+        "customer_service": [
+          "get_ticket",
+          "save_draft_message"
+        ]
+      },
+      "human_approvals": [
+        {
+          "approval_id": 1,
+          "kind": "invoice",
+          "ref_id": 501,
+          "payee": "Bulldog Print Co",
+          "amount": 840.0,
+          "requested_by": "accounting",
+          "status": "paid",
+          "approved_by": "JZ",
+          "payment_id": 1,
+          "paid_at": "2026-08-31"
+        }
+      ],
+      "purchase_orders": [
+        {
+          "id": 1,
+          "vendor_id": 1,
+          "sku": "CC-TEE-WHITE",
+          "size": "S",
+          "qty": 1,
+          "unit_cost": 8.0,
+          "total_cost": 8.0,
+          "ticket_id": 101,
+          "expected_arrival": "2026-09-05",
+          "status": "draft",
+          "created_by": "inventory",
+          "created_on": "2026-08-31"
+        }
+      ],
+      "message_drafts": [
+        {
+          "id": 1,
+          "ticket_id": 101,
+          "recipient": "Tauhid Zaman",
+          "subject": "Your Classic Bulldog Tee (size S)",
+          "status": "draft"
+        },
+        {
+          "id": 3,
+          "ticket_id": 101,
+          "recipient": "Tauhid Zaman",
+          "subject": "Your Classic Bulldog Tee (size S) order",
+          "status": "draft"
+        }
+      ],
+      "checking_change": -840.0,
+      "runs": [
+        {
+          "audit_seq": 4,
+          "seconds": 55.8,
+          "final_status": "waiting_approval",
+          "agents": [
+            "boss",
+            "inventory",
+            "accounting",
+            "customer_service"
+          ],
+          "checking_before": 3400.0,
+          "checking_after": 3400.0
+        },
+        {
+          "audit_seq": 9,
+          "seconds": 41.6,
+          "final_status": "waiting_vendor",
+          "agents": [
+            "boss",
+            "inventory",
+            "customer_service"
+          ],
+          "checking_before": 160.0,
+          "checking_after": 160.0
+        }
+      ]
+    },
+    {
+      "ticket_id": 103,
+      "type": "price_override",
+      "requester": "Yale AI Club",
+      "final_status": "waiting_customer",
+      "board_state": "resolved",
+      "outcome": "8 of 20 size-M hoodies in stock (short 12). The Boss approved a 10% bulk discount: $52.20/unit, $1,044 for 20, 57.9% margin, $604 gross profit. No new payment (invoice 501 was already queued from ticket 101). Customer Service drafted the offer. Waiting on the club to accept before the 12-unit restock PO is drafted.",
+      "agents": {
+        "boss": "Sent to Inventory first (can we supply 20?), then Accounting (margin), chose the 10% discount itself, then Customer Service. Pass 1 ended waiting_approval (restock blocked by approval #1); the pass after the payment ended waiting_customer.",
+        "inventory": "check_stock: 8 on hand, short 12. check_vendor_restock: Bulldog blocked by invoice 501 on pass 1, can ship on pass 2 (ETA 2026-09-05 if ordered today). No PO, since the customer hasn't accepted yet.",
+        "accounting": "quote_discount at list and at the cost floor on pass 1 (max discount before loss 62.1%); on pass 2 verified the 10% offer ($52.20, $1,044, 57.9%, $604) and that no payment is needed for this ticket.",
+        "facilities": "Not dispatched.",
+        "customer_service": "Saved draft #2 (10% offer, 8 now + 12 restock, no date) and corrected draft #4 after the vendor was unblocked (Sept 5 earliest, not guaranteed). Nothing sent."
+      },
+      "mcp_tools_used_by_agent": {
+        "boss": [
+          "get_ticket",
+          "update_ticket_status",
+          "list_bills_due",
+          "list_approvals"
+        ],
+        "inventory": [
+          "get_ticket",
+          "check_stock",
+          "check_vendor_restock"
+        ],
+        "accounting": [
+          "quote_discount",
+          "get_ticket",
+          "check_stock",
+          "list_bills_due",
+          "list_approvals",
+          "check_vendor_restock"
+        ],
+        "customer_service": [
+          "get_ticket",
+          "save_draft_message"
+        ]
+      },
+      "human_approvals": [],
+      "purchase_orders": [],
+      "message_drafts": [
+        {
+          "id": 2,
+          "ticket_id": 103,
+          "recipient": "Yale AI Club",
+          "subject": "Your 20 Navy Hoodies (size M)",
+          "status": "draft"
+        },
+        {
+          "id": 4,
+          "ticket_id": 103,
+          "recipient": "Yale AI Club",
+          "subject": "Your 20 Navy Hoodies (size M) offer",
+          "status": "draft"
+        }
+      ],
+      "checking_change": 0.0,
+      "runs": [
+        {
+          "audit_seq": 5,
+          "seconds": 55.6,
+          "final_status": "waiting_approval",
+          "agents": [
+            "boss",
+            "inventory",
+            "accounting",
+            "customer_service"
+          ],
+          "checking_before": 3400.0,
+          "checking_after": 3400.0
+        },
+        {
+          "audit_seq": 10,
+          "seconds": 52.9,
+          "final_status": "waiting_customer",
+          "agents": [
+            "boss",
+            "inventory",
+            "accounting",
+            "customer_service"
+          ],
+          "checking_before": 160.0,
+          "checking_after": 160.0
+        }
+      ]
+    },
+    {
+      "ticket_id": 102,
+      "type": "rent_notice",
+      "requester": "Elm City Properties",
+      "final_status": "resolved",
+      "board_state": "resolved",
+      "outcome": "Facilities verified the notice against lease 1 ($2,400 due 2026-09-02, 2 days out) and queued the rent. A human (JZ) approved it: checking dropped $2,400 and the lease's next_due moved to 2026-10-02. Resolved.",
+      "agents": {
+        "boss": "Sent the ticket to Facilities only; checked list_bills_due and list_approvals for the whole cash picture. waiting_approval after pass 1, then resolved after the payment. Flagged that next month's $2,400 rent exceeds the $160 left (short $2,240).",
+        "inventory": "Not dispatched.",
+        "accounting": "Not dispatched (Facilities and the Boss covered the cash check).",
+        "facilities": "get_lease confirmed $2,400 due in 2 days; list_approvals + list_bills_due showed $3,400 - $840 pending - $2,400 = $160 >= 0; request_payment -> approval #2 pending. Pass 2: confirmed it's paid and made no duplicate request. (It also called the advanced next_due a 'conflict' with the notice; that's a false alarm, since the date moved because rent was paid.)",
+        "customer_service": "Not dispatched (landlord isn't a customer; nothing to send)."
+      },
+      "mcp_tools_used_by_agent": {
+        "boss": [
+          "get_ticket",
+          "update_ticket_status",
+          "list_bills_due",
+          "list_approvals"
+        ],
+        "facilities": [
+          "get_ticket",
+          "get_lease",
+          "list_approvals",
+          "list_bills_due",
+          "request_payment"
+        ]
+      },
+      "human_approvals": [
+        {
+          "approval_id": 2,
+          "kind": "rent",
+          "ref_id": 1,
+          "payee": "Elm City Properties",
+          "amount": 2400.0,
+          "requested_by": "facilities",
+          "status": "paid",
+          "approved_by": "JZ",
+          "payment_id": 2,
+          "paid_at": "2026-08-31"
+        }
+      ],
+      "purchase_orders": [],
+      "message_drafts": [],
+      "checking_change": -2400.0,
+      "runs": [
+        {
+          "audit_seq": 6,
+          "seconds": 28.9,
+          "final_status": "waiting_approval",
+          "agents": [
+            "boss",
+            "facilities"
+          ],
+          "checking_before": 3400.0,
+          "checking_after": 3400.0
+        },
+        {
+          "audit_seq": 11,
+          "seconds": 26.9,
+          "final_status": "resolved",
+          "agents": [
+            "boss",
+            "facilities"
+          ],
+          "checking_before": 160.0,
+          "checking_after": 160.0
+        }
+      ]
+    }
+  ]
+}

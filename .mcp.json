@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "campus-customs": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["mcp_server/server.py"],
+      "env": {
+        "CAMPUS_DB": "data/campus_customs_new.db"
+      }
+    }
+  }
+}
