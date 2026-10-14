@@ -34,7 +34,7 @@ cd campus-customs
 # Python environment (Windows: .venv\Scripts\activate)
 python -m venv .venv
 source .venv/bin/activate
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 
 # Dashboard dependencies
 cd frontend && npm install && cd ..

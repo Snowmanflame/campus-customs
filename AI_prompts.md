@@ -88,3 +88,19 @@ Problem 1 — log of prompts typed to the AI coding assistant (Claude Code), in 
 ## Prompt 20 — Problem 11: submit to GitHub
 
 > Now we're moving on to problem 11. which is submit to GitHub. I need you to push the code to a public GitHub repository. So um, people can clone it. Um, and please also put it in output/github_url.txt. Do not push our real .env to the Github rep. Do includeboth database file under data/ (both the original and our working copy), which is submit to GitHub. I need you to push the code to a public GitHub repository so um, people can clone it. Um, and please also put it in. Readme should explain Copy original DB to the working copy when you need a clean run. Star MCP server start fast API backend start the React board reset the DB before a full three ticket run. Also, I have no idea how to push my code to a public GitHub. I have an account, but I'm not really sure how to push it. Online to the repository.
+
+## Prompt 21 — Confirm the submission URL
+
+> [screenshot of the assignment's "Website URL" field filled with https://github.com/Snowmanflame/campus-customs] so this is it right ?
+
+## Prompt 22 — Submit without the final log update
+
+> it's okay I'll submit now without the update
+
+## Prompt 23 — Check the folder structure
+
+> [screenshot of the expected hw5/ folder tree] can you confirm that our HW5 file following this similar structure?
+
+## Prompt 24 — Add top-level requirements.txt and push
+
+> please add it and push. This is for a different session.
